@@ -1,5 +1,6 @@
 package com.pedrocomitto.poc.multipledatasources.config;
 
+import com.pedrocomitto.poc.multipledatasources.first.domain.entity.FirstDatabaseEntity;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -39,12 +40,11 @@ public class FirstDataSourceConfig {
 
     @Bean
     @Primary
-    public LocalContainerEntityManagerFactoryBean firstDatabaseEntityManagerFactory(EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean firstDatabaseEntityManagerFactory(final EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(firstDataSource())
-                .packages("com.pedrocomitto.multipledatasources.first")
                 .properties(singletonMap("hibernate.hbm2ddl.auto", "create-drop"))
-//                .packages(FirstDatabaseEntity.class)
+                .packages(FirstDatabaseEntity.class)
                 .build();
     }
 

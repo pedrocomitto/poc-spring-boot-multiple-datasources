@@ -1,5 +1,6 @@
 package com.pedrocomitto.poc.multipledatasources.config;
 
+import com.pedrocomitto.poc.multipledatasources.second.domain.entity.SecondDatabaseEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,7 +21,7 @@ import static java.util.Collections.singletonMap;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         entityManagerFactoryRef = "secondDatabaseEntityManagerFactory",
-        transactionManagerRef = "mysqlTransactionManager",
+        transactionManagerRef = "secondDatabaseEntityTransactionManager",
         basePackages = "com.pedrocomitto.multipledatasources.second.repository")
 public class SecondDatabaseConfig {
 
@@ -39,14 +40,14 @@ public class SecondDatabaseConfig {
     public LocalContainerEntityManagerFactoryBean secondDatabaseEntityManagerFactory(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(secondDataSource())
-                .packages("com.pedrocomitto.multipledatasources.second")
                 .properties(singletonMap("hibernate.hbm2ddl.auto", "create-drop"))
-//                .packages(SecondDatabaseEntity.class)
+                .packages(SecondDatabaseEntity.class)
                 .build();
     }
 
     @Bean
-    public PlatformTransactionManager mysqlTransactionManager(final @Qualifier("secondDatabaseEntityManagerFactory") LocalContainerEntityManagerFactoryBean secondDatabaseEntityManagerFactory) {
+    public PlatformTransactionManager secondDatabaseEntityTransactionManager(final LocalContainerEntityManagerFactoryBean secondDatabaseEntityManagerFactory) {
         return new JpaTransactionManager(secondDatabaseEntityManagerFactory.getObject());
     }
+
 }
