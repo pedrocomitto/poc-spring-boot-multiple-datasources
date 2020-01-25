@@ -22,4 +22,5 @@ public class SecondDatabaseEntity {
     private Long id;
 
     private String param;
+
 }
